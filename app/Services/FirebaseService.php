@@ -126,4 +126,26 @@ class FirebaseService
             throw $e;
         }
     }
+
+
+    public function getPendingTransfers()
+    {
+        try {
+            $collection = $this->firestore->collection('scheduled_transfers');
+            $documents = $collection->where('status', '=', 'pending')->documents();
+
+            $pendingTransfers = [];
+            foreach ($documents as $document) {
+                $pendingTransfers[] = [
+                    'id' => $document->id(),
+                    'data' => $document->data()
+                ];
+            }
+
+            return $pendingTransfers;
+        } catch (Exception $e) {
+            Log::error('Erreur lors de la récupération des transferts en attente : ' . $e->getMessage());
+            throw $e;
+        }
+    }
 }

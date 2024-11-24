@@ -10,6 +10,13 @@ use App\Services\FirebaseService;
 
 class TransferController extends Controller
 {
+
+    private $firebaseService;
+
+    public function __construct(FirebaseService $firebaseService)
+    {
+        $this->firebaseService = $firebaseService;
+    }
     public function scheduleTransfer(Request $request)
     {
         $validated = $request->validate([
@@ -36,6 +43,23 @@ class TransferController extends Controller
             return response()->json(['message' => 'Transferts traités avec succès']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function listPendingTransfers()
+    {
+        try {
+            $pendingTransfers = $this->firebaseService->getPendingTransfers();
+
+            return response()->json([
+                'message' => 'Transferts en attente récupérés avec succès',
+                'pendingTransfers' => $pendingTransfers
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erreur lors de la récupération des transferts en attente : ' . $e->getMessage()
+            ], 500);
         }
     }
 }

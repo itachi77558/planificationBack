@@ -23,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('/schedule-transfer', [TransferController::class, 'scheduleTransfer']);
 Route::get('/process-transfers', [TransferController::class, 'processTransfers']);
+Route::get('/pending-transfers', [TransferController::class, 'listPendingTransfers']);
